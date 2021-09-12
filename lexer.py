@@ -63,11 +63,18 @@ def p_orexp(p):
     'expr : expr OR expr'
     p[0] = p[2]
 
+def p_impli(p):
+    'expr : expr IMPLICATION expr'
+    p[0] = p[2]
+
+def p_dimpli(p):
+    'expr : expr DIMPLICATION expr'
+    p[0] = p[2]
 
 def p_error( p ):
     print("Syntax error in input!")
 
 parser = yacc.yacc()
 
-res = parser.parse("(~(p^(qor))os)")
+res = parser.parse("((p=>q)^p)")
 print(res)
