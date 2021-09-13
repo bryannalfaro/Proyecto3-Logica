@@ -1,10 +1,5 @@
 Created by PLY version 3.11 (http://www.dabeaz.com/ply)
 
-Unused terminals:
-
-    COMMA
-    CONST
-
 Grammar
 
 Rule 0     S' -> expr
@@ -15,12 +10,15 @@ Rule 4     expr -> expr AND expr
 Rule 5     expr -> expr OR expr
 Rule 6     expr -> expr IMPLICATION expr
 Rule 7     expr -> expr DIMPLICATION expr
+Rule 8     expr -> expr COMMA expr
+Rule 9     expr -> COMMA
+Rule 10    expr -> CONST
 
 Terminals, with rules where they appear
 
 AND                  : 4
-COMMA                : 
-CONST                : 
+COMMA                : 8 9
+CONST                : 10
 DIMPLICATION         : 7
 IMPLICATION          : 6
 LETTERS              : 1
@@ -32,7 +30,7 @@ error                :
 
 Nonterminals, with rules where they appear
 
-expr                 : 2 3 4 4 5 5 6 6 7 7 0
+expr                 : 2 3 4 4 5 5 6 6 7 7 8 8 0
 
 Parsing method: LALR
 
@@ -46,10 +44,15 @@ state 0
     (5) expr -> . expr OR expr
     (6) expr -> . expr IMPLICATION expr
     (7) expr -> . expr DIMPLICATION expr
+    (8) expr -> . expr COMMA expr
+    (9) expr -> . COMMA
+    (10) expr -> . CONST
 
     LETTERS         shift and go to state 2
     NEGATIVE        shift and go to state 3
     LPAREN          shift and go to state 4
+    COMMA           shift and go to state 5
+    CONST           shift and go to state 6
 
     expr                           shift and go to state 1
 
@@ -60,11 +63,13 @@ state 1
     (5) expr -> expr . OR expr
     (6) expr -> expr . IMPLICATION expr
     (7) expr -> expr . DIMPLICATION expr
+    (8) expr -> expr . COMMA expr
 
-    AND             shift and go to state 5
-    OR              shift and go to state 6
-    IMPLICATION     shift and go to state 7
-    DIMPLICATION    shift and go to state 8
+    AND             shift and go to state 7
+    OR              shift and go to state 8
+    IMPLICATION     shift and go to state 9
+    DIMPLICATION    shift and go to state 10
+    COMMA           shift and go to state 11
 
 
 state 2
@@ -75,6 +80,7 @@ state 2
     OR              reduce using rule 1 (expr -> LETTERS .)
     IMPLICATION     reduce using rule 1 (expr -> LETTERS .)
     DIMPLICATION    reduce using rule 1 (expr -> LETTERS .)
+    COMMA           reduce using rule 1 (expr -> LETTERS .)
     $end            reduce using rule 1 (expr -> LETTERS .)
     RPAREN          reduce using rule 1 (expr -> LETTERS .)
 
@@ -89,12 +95,17 @@ state 3
     (5) expr -> . expr OR expr
     (6) expr -> . expr IMPLICATION expr
     (7) expr -> . expr DIMPLICATION expr
+    (8) expr -> . expr COMMA expr
+    (9) expr -> . COMMA
+    (10) expr -> . CONST
 
     LETTERS         shift and go to state 2
     NEGATIVE        shift and go to state 3
     LPAREN          shift and go to state 4
+    COMMA           shift and go to state 5
+    CONST           shift and go to state 6
 
-    expr                           shift and go to state 9
+    expr                           shift and go to state 12
 
 state 4
 
@@ -106,14 +117,45 @@ state 4
     (5) expr -> . expr OR expr
     (6) expr -> . expr IMPLICATION expr
     (7) expr -> . expr DIMPLICATION expr
+    (8) expr -> . expr COMMA expr
+    (9) expr -> . COMMA
+    (10) expr -> . CONST
 
     LETTERS         shift and go to state 2
     NEGATIVE        shift and go to state 3
     LPAREN          shift and go to state 4
+    COMMA           shift and go to state 5
+    CONST           shift and go to state 6
 
-    expr                           shift and go to state 10
+    expr                           shift and go to state 13
 
 state 5
+
+    (9) expr -> COMMA .
+
+    AND             reduce using rule 9 (expr -> COMMA .)
+    OR              reduce using rule 9 (expr -> COMMA .)
+    IMPLICATION     reduce using rule 9 (expr -> COMMA .)
+    DIMPLICATION    reduce using rule 9 (expr -> COMMA .)
+    COMMA           reduce using rule 9 (expr -> COMMA .)
+    $end            reduce using rule 9 (expr -> COMMA .)
+    RPAREN          reduce using rule 9 (expr -> COMMA .)
+
+
+state 6
+
+    (10) expr -> CONST .
+
+    AND             reduce using rule 10 (expr -> CONST .)
+    OR              reduce using rule 10 (expr -> CONST .)
+    IMPLICATION     reduce using rule 10 (expr -> CONST .)
+    DIMPLICATION    reduce using rule 10 (expr -> CONST .)
+    COMMA           reduce using rule 10 (expr -> CONST .)
+    $end            reduce using rule 10 (expr -> CONST .)
+    RPAREN          reduce using rule 10 (expr -> CONST .)
+
+
+state 7
 
     (4) expr -> expr AND . expr
     (1) expr -> . LETTERS
@@ -123,14 +165,19 @@ state 5
     (5) expr -> . expr OR expr
     (6) expr -> . expr IMPLICATION expr
     (7) expr -> . expr DIMPLICATION expr
+    (8) expr -> . expr COMMA expr
+    (9) expr -> . COMMA
+    (10) expr -> . CONST
 
     LETTERS         shift and go to state 2
     NEGATIVE        shift and go to state 3
     LPAREN          shift and go to state 4
+    COMMA           shift and go to state 5
+    CONST           shift and go to state 6
 
-    expr                           shift and go to state 11
+    expr                           shift and go to state 14
 
-state 6
+state 8
 
     (5) expr -> expr OR . expr
     (1) expr -> . LETTERS
@@ -140,14 +187,19 @@ state 6
     (5) expr -> . expr OR expr
     (6) expr -> . expr IMPLICATION expr
     (7) expr -> . expr DIMPLICATION expr
+    (8) expr -> . expr COMMA expr
+    (9) expr -> . COMMA
+    (10) expr -> . CONST
 
     LETTERS         shift and go to state 2
     NEGATIVE        shift and go to state 3
     LPAREN          shift and go to state 4
+    COMMA           shift and go to state 5
+    CONST           shift and go to state 6
 
-    expr                           shift and go to state 12
+    expr                           shift and go to state 15
 
-state 7
+state 9
 
     (6) expr -> expr IMPLICATION . expr
     (1) expr -> . LETTERS
@@ -157,14 +209,19 @@ state 7
     (5) expr -> . expr OR expr
     (6) expr -> . expr IMPLICATION expr
     (7) expr -> . expr DIMPLICATION expr
+    (8) expr -> . expr COMMA expr
+    (9) expr -> . COMMA
+    (10) expr -> . CONST
 
     LETTERS         shift and go to state 2
     NEGATIVE        shift and go to state 3
     LPAREN          shift and go to state 4
+    COMMA           shift and go to state 5
+    CONST           shift and go to state 6
 
-    expr                           shift and go to state 13
+    expr                           shift and go to state 16
 
-state 8
+state 10
 
     (7) expr -> expr DIMPLICATION . expr
     (1) expr -> . LETTERS
@@ -174,142 +231,217 @@ state 8
     (5) expr -> . expr OR expr
     (6) expr -> . expr IMPLICATION expr
     (7) expr -> . expr DIMPLICATION expr
+    (8) expr -> . expr COMMA expr
+    (9) expr -> . COMMA
+    (10) expr -> . CONST
 
     LETTERS         shift and go to state 2
     NEGATIVE        shift and go to state 3
     LPAREN          shift and go to state 4
+    COMMA           shift and go to state 5
+    CONST           shift and go to state 6
 
-    expr                           shift and go to state 14
+    expr                           shift and go to state 17
 
-state 9
+state 11
+
+    (8) expr -> expr COMMA . expr
+    (1) expr -> . LETTERS
+    (2) expr -> . NEGATIVE expr
+    (3) expr -> . LPAREN expr RPAREN
+    (4) expr -> . expr AND expr
+    (5) expr -> . expr OR expr
+    (6) expr -> . expr IMPLICATION expr
+    (7) expr -> . expr DIMPLICATION expr
+    (8) expr -> . expr COMMA expr
+    (9) expr -> . COMMA
+    (10) expr -> . CONST
+
+    LETTERS         shift and go to state 2
+    NEGATIVE        shift and go to state 3
+    LPAREN          shift and go to state 4
+    COMMA           shift and go to state 5
+    CONST           shift and go to state 6
+
+    expr                           shift and go to state 18
+
+state 12
 
     (2) expr -> NEGATIVE expr .
     (4) expr -> expr . AND expr
     (5) expr -> expr . OR expr
     (6) expr -> expr . IMPLICATION expr
     (7) expr -> expr . DIMPLICATION expr
+    (8) expr -> expr . COMMA expr
 
     AND             reduce using rule 2 (expr -> NEGATIVE expr .)
     OR              reduce using rule 2 (expr -> NEGATIVE expr .)
     IMPLICATION     reduce using rule 2 (expr -> NEGATIVE expr .)
     DIMPLICATION    reduce using rule 2 (expr -> NEGATIVE expr .)
+    COMMA           reduce using rule 2 (expr -> NEGATIVE expr .)
     $end            reduce using rule 2 (expr -> NEGATIVE expr .)
     RPAREN          reduce using rule 2 (expr -> NEGATIVE expr .)
 
-  ! AND             [ shift and go to state 5 ]
-  ! OR              [ shift and go to state 6 ]
-  ! IMPLICATION     [ shift and go to state 7 ]
-  ! DIMPLICATION    [ shift and go to state 8 ]
+  ! AND             [ shift and go to state 7 ]
+  ! OR              [ shift and go to state 8 ]
+  ! IMPLICATION     [ shift and go to state 9 ]
+  ! DIMPLICATION    [ shift and go to state 10 ]
+  ! COMMA           [ shift and go to state 11 ]
 
 
-state 10
+state 13
 
     (3) expr -> LPAREN expr . RPAREN
     (4) expr -> expr . AND expr
     (5) expr -> expr . OR expr
     (6) expr -> expr . IMPLICATION expr
     (7) expr -> expr . DIMPLICATION expr
+    (8) expr -> expr . COMMA expr
 
-    RPAREN          shift and go to state 15
-    AND             shift and go to state 5
-    OR              shift and go to state 6
-    IMPLICATION     shift and go to state 7
-    DIMPLICATION    shift and go to state 8
+    RPAREN          shift and go to state 19
+    AND             shift and go to state 7
+    OR              shift and go to state 8
+    IMPLICATION     shift and go to state 9
+    DIMPLICATION    shift and go to state 10
+    COMMA           shift and go to state 11
 
 
-state 11
+state 14
 
     (4) expr -> expr AND expr .
     (4) expr -> expr . AND expr
     (5) expr -> expr . OR expr
     (6) expr -> expr . IMPLICATION expr
     (7) expr -> expr . DIMPLICATION expr
+    (8) expr -> expr . COMMA expr
 
     AND             reduce using rule 4 (expr -> expr AND expr .)
     OR              reduce using rule 4 (expr -> expr AND expr .)
     IMPLICATION     reduce using rule 4 (expr -> expr AND expr .)
     DIMPLICATION    reduce using rule 4 (expr -> expr AND expr .)
+    COMMA           reduce using rule 4 (expr -> expr AND expr .)
     $end            reduce using rule 4 (expr -> expr AND expr .)
     RPAREN          reduce using rule 4 (expr -> expr AND expr .)
 
-  ! AND             [ shift and go to state 5 ]
-  ! OR              [ shift and go to state 6 ]
-  ! IMPLICATION     [ shift and go to state 7 ]
-  ! DIMPLICATION    [ shift and go to state 8 ]
+  ! AND             [ shift and go to state 7 ]
+  ! OR              [ shift and go to state 8 ]
+  ! IMPLICATION     [ shift and go to state 9 ]
+  ! DIMPLICATION    [ shift and go to state 10 ]
+  ! COMMA           [ shift and go to state 11 ]
 
 
-state 12
+state 15
 
     (5) expr -> expr OR expr .
     (4) expr -> expr . AND expr
     (5) expr -> expr . OR expr
     (6) expr -> expr . IMPLICATION expr
     (7) expr -> expr . DIMPLICATION expr
+    (8) expr -> expr . COMMA expr
 
     OR              reduce using rule 5 (expr -> expr OR expr .)
     IMPLICATION     reduce using rule 5 (expr -> expr OR expr .)
     DIMPLICATION    reduce using rule 5 (expr -> expr OR expr .)
+    COMMA           reduce using rule 5 (expr -> expr OR expr .)
     $end            reduce using rule 5 (expr -> expr OR expr .)
     RPAREN          reduce using rule 5 (expr -> expr OR expr .)
-    AND             shift and go to state 5
+    AND             shift and go to state 7
 
   ! AND             [ reduce using rule 5 (expr -> expr OR expr .) ]
-  ! OR              [ shift and go to state 6 ]
-  ! IMPLICATION     [ shift and go to state 7 ]
-  ! DIMPLICATION    [ shift and go to state 8 ]
+  ! OR              [ shift and go to state 8 ]
+  ! IMPLICATION     [ shift and go to state 9 ]
+  ! DIMPLICATION    [ shift and go to state 10 ]
+  ! COMMA           [ shift and go to state 11 ]
 
 
-state 13
+state 16
 
     (6) expr -> expr IMPLICATION expr .
     (4) expr -> expr . AND expr
     (5) expr -> expr . OR expr
     (6) expr -> expr . IMPLICATION expr
     (7) expr -> expr . DIMPLICATION expr
+    (8) expr -> expr . COMMA expr
 
   ! shift/reduce conflict for AND resolved as shift
   ! shift/reduce conflict for OR resolved as shift
   ! shift/reduce conflict for IMPLICATION resolved as shift
   ! shift/reduce conflict for DIMPLICATION resolved as shift
+  ! shift/reduce conflict for COMMA resolved as shift
     $end            reduce using rule 6 (expr -> expr IMPLICATION expr .)
     RPAREN          reduce using rule 6 (expr -> expr IMPLICATION expr .)
-    AND             shift and go to state 5
-    OR              shift and go to state 6
-    IMPLICATION     shift and go to state 7
-    DIMPLICATION    shift and go to state 8
+    AND             shift and go to state 7
+    OR              shift and go to state 8
+    IMPLICATION     shift and go to state 9
+    DIMPLICATION    shift and go to state 10
+    COMMA           shift and go to state 11
 
   ! AND             [ reduce using rule 6 (expr -> expr IMPLICATION expr .) ]
   ! OR              [ reduce using rule 6 (expr -> expr IMPLICATION expr .) ]
   ! IMPLICATION     [ reduce using rule 6 (expr -> expr IMPLICATION expr .) ]
   ! DIMPLICATION    [ reduce using rule 6 (expr -> expr IMPLICATION expr .) ]
+  ! COMMA           [ reduce using rule 6 (expr -> expr IMPLICATION expr .) ]
 
 
-state 14
+state 17
 
     (7) expr -> expr DIMPLICATION expr .
     (4) expr -> expr . AND expr
     (5) expr -> expr . OR expr
     (6) expr -> expr . IMPLICATION expr
     (7) expr -> expr . DIMPLICATION expr
+    (8) expr -> expr . COMMA expr
 
   ! shift/reduce conflict for AND resolved as shift
   ! shift/reduce conflict for OR resolved as shift
   ! shift/reduce conflict for IMPLICATION resolved as shift
   ! shift/reduce conflict for DIMPLICATION resolved as shift
+  ! shift/reduce conflict for COMMA resolved as shift
     $end            reduce using rule 7 (expr -> expr DIMPLICATION expr .)
     RPAREN          reduce using rule 7 (expr -> expr DIMPLICATION expr .)
-    AND             shift and go to state 5
-    OR              shift and go to state 6
-    IMPLICATION     shift and go to state 7
-    DIMPLICATION    shift and go to state 8
+    AND             shift and go to state 7
+    OR              shift and go to state 8
+    IMPLICATION     shift and go to state 9
+    DIMPLICATION    shift and go to state 10
+    COMMA           shift and go to state 11
 
   ! AND             [ reduce using rule 7 (expr -> expr DIMPLICATION expr .) ]
   ! OR              [ reduce using rule 7 (expr -> expr DIMPLICATION expr .) ]
   ! IMPLICATION     [ reduce using rule 7 (expr -> expr DIMPLICATION expr .) ]
   ! DIMPLICATION    [ reduce using rule 7 (expr -> expr DIMPLICATION expr .) ]
+  ! COMMA           [ reduce using rule 7 (expr -> expr DIMPLICATION expr .) ]
 
 
-state 15
+state 18
+
+    (8) expr -> expr COMMA expr .
+    (4) expr -> expr . AND expr
+    (5) expr -> expr . OR expr
+    (6) expr -> expr . IMPLICATION expr
+    (7) expr -> expr . DIMPLICATION expr
+    (8) expr -> expr . COMMA expr
+
+  ! shift/reduce conflict for AND resolved as shift
+  ! shift/reduce conflict for OR resolved as shift
+  ! shift/reduce conflict for IMPLICATION resolved as shift
+  ! shift/reduce conflict for DIMPLICATION resolved as shift
+  ! shift/reduce conflict for COMMA resolved as shift
+    $end            reduce using rule 8 (expr -> expr COMMA expr .)
+    RPAREN          reduce using rule 8 (expr -> expr COMMA expr .)
+    AND             shift and go to state 7
+    OR              shift and go to state 8
+    IMPLICATION     shift and go to state 9
+    DIMPLICATION    shift and go to state 10
+    COMMA           shift and go to state 11
+
+  ! AND             [ reduce using rule 8 (expr -> expr COMMA expr .) ]
+  ! OR              [ reduce using rule 8 (expr -> expr COMMA expr .) ]
+  ! IMPLICATION     [ reduce using rule 8 (expr -> expr COMMA expr .) ]
+  ! DIMPLICATION    [ reduce using rule 8 (expr -> expr COMMA expr .) ]
+  ! COMMA           [ reduce using rule 8 (expr -> expr COMMA expr .) ]
+
+
+state 19
 
     (3) expr -> LPAREN expr RPAREN .
 
@@ -317,17 +449,25 @@ state 15
     OR              reduce using rule 3 (expr -> LPAREN expr RPAREN .)
     IMPLICATION     reduce using rule 3 (expr -> LPAREN expr RPAREN .)
     DIMPLICATION    reduce using rule 3 (expr -> LPAREN expr RPAREN .)
+    COMMA           reduce using rule 3 (expr -> LPAREN expr RPAREN .)
     $end            reduce using rule 3 (expr -> LPAREN expr RPAREN .)
     RPAREN          reduce using rule 3 (expr -> LPAREN expr RPAREN .)
 
 WARNING: 
 WARNING: Conflicts:
 WARNING: 
-WARNING: shift/reduce conflict for AND in state 13 resolved as shift
-WARNING: shift/reduce conflict for OR in state 13 resolved as shift
-WARNING: shift/reduce conflict for IMPLICATION in state 13 resolved as shift
-WARNING: shift/reduce conflict for DIMPLICATION in state 13 resolved as shift
-WARNING: shift/reduce conflict for AND in state 14 resolved as shift
-WARNING: shift/reduce conflict for OR in state 14 resolved as shift
-WARNING: shift/reduce conflict for IMPLICATION in state 14 resolved as shift
-WARNING: shift/reduce conflict for DIMPLICATION in state 14 resolved as shift
+WARNING: shift/reduce conflict for AND in state 16 resolved as shift
+WARNING: shift/reduce conflict for OR in state 16 resolved as shift
+WARNING: shift/reduce conflict for IMPLICATION in state 16 resolved as shift
+WARNING: shift/reduce conflict for DIMPLICATION in state 16 resolved as shift
+WARNING: shift/reduce conflict for COMMA in state 16 resolved as shift
+WARNING: shift/reduce conflict for AND in state 17 resolved as shift
+WARNING: shift/reduce conflict for OR in state 17 resolved as shift
+WARNING: shift/reduce conflict for IMPLICATION in state 17 resolved as shift
+WARNING: shift/reduce conflict for DIMPLICATION in state 17 resolved as shift
+WARNING: shift/reduce conflict for COMMA in state 17 resolved as shift
+WARNING: shift/reduce conflict for AND in state 18 resolved as shift
+WARNING: shift/reduce conflict for OR in state 18 resolved as shift
+WARNING: shift/reduce conflict for IMPLICATION in state 18 resolved as shift
+WARNING: shift/reduce conflict for DIMPLICATION in state 18 resolved as shift
+WARNING: shift/reduce conflict for COMMA in state 18 resolved as shift

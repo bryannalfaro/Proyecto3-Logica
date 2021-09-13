@@ -40,9 +40,6 @@ precedence = (
     ( 'left', 'NEGATIVE' ),
 )
 
-
-
-
 def p_neg3( p ) :
     'expr : LETTERS'
     p[0] = p[1]
@@ -71,10 +68,25 @@ def p_dimpli(p):
     'expr : expr DIMPLICATION expr'
     p[0] = p[2]
 
+def p_comma(p):
+    'expr : expr COMMA expr'
+    p[0] = p[2]
+
+def p_comma1(p):
+    'expr : COMMA'
+    p[0] = p[1]
+
+def p_const(p):
+    'expr : CONST'
+    p[0] = p[1]
+
 def p_error( p ):
     print("Syntax error in input!")
 
+
+
+
 parser = yacc.yacc()
 
-res = parser.parse("((p=>q)^p)")
+res = parser.parse("0")
 print(res)
