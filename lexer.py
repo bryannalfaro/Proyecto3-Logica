@@ -1,5 +1,9 @@
 from ply import lex
 import ply.yacc as yacc
+import networkx as nx
+import matplotlib.pyplot as plt
+
+
 
 tokens = (
     'LETTERS',
@@ -36,48 +40,71 @@ lexer = lex.lex()
 
 precedence = (
     ('left', 'OR' ),
+    ( 'left', 'IMPLICATION' ),
     ( 'left', 'AND' ),
     ( 'left', 'NEGATIVE' ),
+
 )
 
 def p_neg3( p ) :
     'expr : LETTERS'
+    g.add_node(p[1])
     p[0] = p[1]
 
 def p_neg2( p ) :
     'expr : NEGATIVE expr'
-    p[0] = p[2]
+    g.add_edge( p[1], p[2])
+    p[0] = p[1]+p[2]
 
 def p_par(p):
     'expr : LPAREN expr RPAREN'
+    g.add_node(p[2])
     p[0] = p[2]
 
 def p_andexp(p):
     'expr : expr AND expr'
-    p[0] = p[2]
+
+    g.add_edge(p[2],p[1])
+    g.add_edge(p[2],p[3])
+    g.add_edge(p[3],p[1]+p[2]+p[3])
+    g.add_edge(p[1],p[1]+p[2]+p[3])
+    p[0] = p[1]+p[2]+p[3]
 
 def p_orexp(p):
     'expr : expr OR expr'
-    p[0] = p[2]
+
+    g.add_edge(p[2],p[1])
+    g.add_edge(p[2],p[3])
+    p[0] = p[1]+p[2]+p[3]
+    p[0] = p[1]+p[2]+p[3]
 
 def p_impli(p):
     'expr : expr IMPLICATION expr'
-    p[0] = p[2]
+    g.add_edge(p[2],p[1]+' ')
+    g.add_edge(p[2],p[3]+' ')
+    g.add_edge(p[2]+' ',p[1]+p[2]+p[3])
+    p[0] = p[1]+p[2]+p[3]
 
 def p_dimpli(p):
     'expr : expr DIMPLICATION expr'
-    p[0] = p[2]
+    g.add_edge(p[2],p[1])
+    g.add_edge(p[2],p[3])
+    p[0] = p[1]+p[2]+p[3]
 
 def p_comma(p):
     'expr : expr COMMA expr'
+    g.add_edge(p[2],p[1])
+    g.add_edge(p[2],p[3])
     p[0] = p[2]
 
 def p_comma1(p):
     'expr : COMMA'
+    g.add_node(p[1])
     p[0] = p[1]
 
 def p_const(p):
     'expr : CONST'
+    g.add_node(p[1])
     p[0] = p[1]
 
 def p_error( p ):
@@ -85,8 +112,15 @@ def p_error( p ):
 
 
 
-
 parser = yacc.yacc()
+global g
+g = nx.Graph()
 
-res = parser.parse("0")
+res = parser.parse("((p=>q)^p)")
+print(list(g.nodes()))
+
+
+
+nx.draw(g, with_labels = True)
+plt.savefig("filename.png")
 print(res)
