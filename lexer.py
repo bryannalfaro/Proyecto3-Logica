@@ -3,8 +3,22 @@ import ply.yacc as yacc
 import networkx as nx
 import matplotlib.pyplot as plt
 
+contador = {
+    'p':0,
+    'q':0,
+    'r':0,
+    's':0,
+    't':0,
+    'u':0,
+    'v':0,
+    'w':0,
+    'x':0,
+    'y':0,
+    'z':0,
+}
 
-
+contadorSymbols = {}
+operators = ['o','^','~','=>','<=>']
 tokens = (
     'LETTERS',
     'NEGATIVE',
@@ -48,7 +62,7 @@ precedence = (
 
 def p_neg3( p ) :
     'expr : LETTERS'
-    g.add_node(p[1])
+    #g.add_node(p[1])
     p[0] = p[1]
 
 def p_neg2( p ) :
@@ -58,23 +72,70 @@ def p_neg2( p ) :
 
 def p_par(p):
     'expr : LPAREN expr RPAREN'
-    g.add_node(p[2])
+    #g.add_node(p[2])
     p[0] = p[2]
 
 def p_andexp(p):
     'expr : expr AND expr'
 
-    g.add_edge(p[2],p[1])
-    g.add_edge(p[2],p[3])
-    g.add_edge(p[3],p[1]+p[2]+p[3])
-    g.add_edge(p[1],p[1]+p[2]+p[3])
+    try:
+        if p[1][1] in operators:
+            print("primer IF AND")
+            if p[3] in contador:
+                contador[p[3]] += 1
+                g.add_edge(p[2],p[3] + (contador[p[3]] * ' '))
+            print(p[3] in contador)
+            g.add_edge(p[2],p[1][1])
+
+    except:
+        try:
+            if p[3][1] in operators:
+
+                print("segundo IF AND")
+
+                contador[p[1]] += 1
+                print(p[3] in contador)
+                g.add_edge(p[2],p[3][1])
+                g.add_edge(p[2],p[1] + (contador[p[1]] * ' '))
+        except:
+                print(contador,"r IF AND")
+
+                contador[p[1]] += 1
+                print(contador,'ultimo except and')
+                g.add_edge(p[2],p[1] + (contador[p[1]] * ' '))
+                contador[p[3]] += 1
+                print(contador,'ultimo except and')
+                g.add_edge(p[2],p[3] + (contador[p[3]] * ' '))
+
     p[0] = p[1]+p[2]+p[3]
 
 def p_orexp(p):
     'expr : expr OR expr'
 
-    g.add_edge(p[2],p[1])
-    g.add_edge(p[2],p[3])
+    #g.add_edge(p[2],p[1])
+
+
+    try:
+        if p[1][1] in operators:
+            print(p[3] in contador,'primer if or')
+            contador[p[3]] += 1
+            print(contador, "primer if OR")
+            new = p[3] + (contador[p[3]] * ' ')
+            g.add_edge(p[2],p[1][1])
+            g.add_edge(p[2], new)
+            print(contador[p[3]])
+    except:
+        try:
+            if p[3][1] in operators:
+                print("segundo IF OR")
+                print(p[3] in contador)
+                g.add_edge(p[2],p[3][1])
+                g.add_edge(p[2],p[1] + (2 * ' '))
+        except:
+                print("ultimo except OR")
+                g.add_edge(p[2],p[1]+' ')
+                g.add_edge(p[2],p[3])
+
     p[0] = p[1]+p[2]+p[3]
     p[0] = p[1]+p[2]+p[3]
 
@@ -104,7 +165,8 @@ def p_comma1(p):
 
 def p_const(p):
     'expr : CONST'
-    g.add_node(p[1])
+    #g.add_node(p[1])
+    print(contador,'const')
     p[0] = p[1]
 
 def p_error( p ):
@@ -116,7 +178,7 @@ parser = yacc.yacc()
 global g
 g = nx.Graph()
 
-res = parser.parse("((p=>q)^p)")
+res = parser.parse("(p^q)op")
 print(list(g.nodes()))
 
 
