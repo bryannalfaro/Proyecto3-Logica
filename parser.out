@@ -317,15 +317,15 @@ state 14
 
     AND             reduce using rule 4 (expr -> expr AND expr .)
     OR              reduce using rule 4 (expr -> expr AND expr .)
-    IMPLICATION     reduce using rule 4 (expr -> expr AND expr .)
     DIMPLICATION    reduce using rule 4 (expr -> expr AND expr .)
     COMMA           reduce using rule 4 (expr -> expr AND expr .)
     $end            reduce using rule 4 (expr -> expr AND expr .)
     RPAREN          reduce using rule 4 (expr -> expr AND expr .)
+    IMPLICATION     shift and go to state 9
 
+  ! IMPLICATION     [ reduce using rule 4 (expr -> expr AND expr .) ]
   ! AND             [ shift and go to state 7 ]
   ! OR              [ shift and go to state 8 ]
-  ! IMPLICATION     [ shift and go to state 9 ]
   ! DIMPLICATION    [ shift and go to state 10 ]
   ! COMMA           [ shift and go to state 11 ]
 
@@ -363,15 +363,15 @@ state 16
     (7) expr -> expr . DIMPLICATION expr
     (8) expr -> expr . COMMA expr
 
+    AND             reduce using rule 6 (expr -> expr IMPLICATION expr .)
     OR              reduce using rule 6 (expr -> expr IMPLICATION expr .)
     IMPLICATION     reduce using rule 6 (expr -> expr IMPLICATION expr .)
     DIMPLICATION    reduce using rule 6 (expr -> expr IMPLICATION expr .)
     COMMA           reduce using rule 6 (expr -> expr IMPLICATION expr .)
     $end            reduce using rule 6 (expr -> expr IMPLICATION expr .)
     RPAREN          reduce using rule 6 (expr -> expr IMPLICATION expr .)
-    AND             shift and go to state 7
 
-  ! AND             [ reduce using rule 6 (expr -> expr IMPLICATION expr .) ]
+  ! AND             [ shift and go to state 7 ]
   ! OR              [ shift and go to state 8 ]
   ! IMPLICATION     [ shift and go to state 9 ]
   ! DIMPLICATION    [ shift and go to state 10 ]
