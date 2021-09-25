@@ -77,15 +77,25 @@ def p_par(p):
 
 def p_andexp(p):
     'expr : expr AND expr'
-
+    simbol =  p[2]
+    find = True
+    # print(list(g.nodes()), 'desde or')
+    # print(p[2] in list(g.nodes()))
+    while find:
+        if simbol in list(g.nodes()):
+            simbol = simbol + ' '
+        else:
+            find = False
     try:
         if p[1][1] in operators:
             print("primer IF AND")
             if p[3] in contador:
                 contador[p[3]] += 1
-                g.add_edge(p[2],p[3] + (contador[p[3]] * ' '))
+                # g.add_edge(p[2],p[3] + (contador[p[3]] * ' '))
+                g.add_edge(simbol,p[3] + (contador[p[3]] * ' '))
             print(p[3] in contador)
-            g.add_edge(p[2],p[1][1])
+            # g.add_edge(p[2],p[1][1])
+            g.add_edge(simbol,p[1][1])
 
     except:
         try:
@@ -95,17 +105,21 @@ def p_andexp(p):
 
                 contador[p[1]] += 1
                 print(p[3] in contador)
-                g.add_edge(p[2],p[3][1])
-                g.add_edge(p[2],p[1] + (contador[p[1]] * ' '))
+                # g.add_edge(p[2],p[3][1])
+                # g.add_edge(p[2],p[1] + (contador[p[1]] * ' '))
+                g.add_edge(simbol,p[3][1])
+                g.add_edge(simbol,p[1] + (contador[p[1]] * ' '))
         except:
                 print(contador,"r IF AND")
 
                 contador[p[1]] += 1
                 print(contador,'ultimo except and')
-                g.add_edge(p[2],p[1] + (contador[p[1]] * ' '))
+                # g.add_edge(p[2],p[1] + (contador[p[1]] * ' '))
+                g.add_edge(simbol,p[1] + (contador[p[1]] * ' '))
                 contador[p[3]] += 1
                 print(contador,'ultimo except and')
-                g.add_edge(p[2],p[3] + (contador[p[3]] * ' '))
+                # g.add_edge(p[2],p[3] + (contador[p[3]] * ' '))
+                g.add_edge(simbol,p[3] + (contador[p[3]] * ' '))
 
     p[0] = p[1]+p[2]+p[3]
 
@@ -115,8 +129,8 @@ def p_orexp(p):
     #g.add_edge(p[2],p[1])
     simbol =  p[2]
     find = True
-    print(list(g.nodes()), 'desde or')
-    print(p[2] in list(g.nodes()))
+    # print(list(g.nodes()), 'desde or')
+    # print(p[2] in list(g.nodes()))
     while find:
         if simbol in list(g.nodes()):
             simbol = simbol + ' '
@@ -191,7 +205,7 @@ parser = yacc.yacc()
 global g
 g = nx.Graph()
 
-res = parser.parse("(p^(qor))os")
+res = parser.parse("(p^(qor))^s")
 print(list(g.nodes()))
 
 
