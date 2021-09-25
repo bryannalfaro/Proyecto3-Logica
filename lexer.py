@@ -113,28 +113,41 @@ def p_orexp(p):
     'expr : expr OR expr'
 
     #g.add_edge(p[2],p[1])
-
-
+    simbol =  p[2]
+    find = True
+    print(list(g.nodes()), 'desde or')
+    print(p[2] in list(g.nodes()))
+    while find:
+        if simbol in list(g.nodes()):
+            simbol = simbol + ' '
+        else:
+            find = False
     try:
         if p[1][1] in operators:
             print(p[3] in contador,'primer if or')
             contador[p[3]] += 1
             print(contador, "primer if OR")
             new = p[3] + (contador[p[3]] * ' ')
-            g.add_edge(p[2],p[1][1])
-            g.add_edge(p[2], new)
+            # g.add_edge(p[2],p[1][1])
+            # g.add_edge(p[2], new)
+            g.add_edge(simbol,p[1][1])
+            g.add_edge(simbol, new)
             print(contador[p[3]])
     except:
         try:
             if p[3][1] in operators:
                 print("segundo IF OR")
                 print(p[3] in contador)
-                g.add_edge(p[2],p[3][1])
-                g.add_edge(p[2],p[1] + (2 * ' '))
+                # g.add_edge(p[2],p[3][1])
+                # g.add_edge(p[2],p[1] + (2 * ' '))
+                g.add_edge(simbol,p[3][1])
+                g.add_edge(simbol,p[1] + (2 * ' '))
         except:
                 print("ultimo except OR")
-                g.add_edge(p[2],p[1]+' ')
-                g.add_edge(p[2],p[3])
+                # g.add_edge(p[2],p[1]+' ')
+                # g.add_edge(p[2],p[3])
+                g.add_edge(simbol,p[1]+' ')
+                g.add_edge(simbol,p[3])
 
     p[0] = p[1]+p[2]+p[3]
     p[0] = p[1]+p[2]+p[3]
@@ -178,7 +191,7 @@ parser = yacc.yacc()
 global g
 g = nx.Graph()
 
-res = parser.parse("(p^q)op")
+res = parser.parse("(p^(qor))os")
 print(list(g.nodes()))
 
 
