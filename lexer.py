@@ -62,7 +62,13 @@ precedence = (
 
 def p_neg3( p ) :
     'expr : LETTERS'
-    #g.add_node(p[1])
+    print(p[1])
+    print(exp)
+    if exp.find('o') == -1 and exp.find('^') == -1 and exp.find('=>') == -1 and exp.find('<=>') == -1:
+        g.add_node(p[1])
+    print(contador[p[1]])
+
+
     p[0] = p[1]
 
 def p_neg2( p ) :
@@ -82,6 +88,8 @@ def p_neg2( p ) :
     if p[2] in contador:
         contador[p[2]] += 1
         g.add_edge(simbol, p[2] + contador[p[2]] * ' ')
+    elif p[2][0] in operators:
+        g.add_edge(simbol, p[2][0])
     elif p[2][1] in operators:
         g.add_edge(p[1], p[2][1])
     elif p[2][1] + p[2][2] in operators:
@@ -98,6 +106,7 @@ def p_par(p):
 
 def p_andexp(p):
     'expr : expr AND expr'
+    print(p[3],'p2 inicio and')
     simbol =  p[2]
     find = True
     # print(list(g.nodes()), 'desde or')
@@ -111,8 +120,8 @@ def p_andexp(p):
     try: # siguiente simbolo esta del lado izquierdo
         if (p[1].find('~')) != -1:
             neg = p[1][0]
-            g.add_edge(p[2],neg)
-            g.add_edge(p[2],p[3])
+            g.add_edge(simbol,neg)
+            g.add_edge(simbol,p[3])
         elif p[1][1] in operators:
             print("primer IF AND")
             if p[3] in contador:
@@ -136,12 +145,12 @@ def p_andexp(p):
         try: # cuando el siguiente simbolo estaba del lado derecho
             if p[3].find('~') != -1:
                 neg = p[3][0]
-                g.add_edge(p[2], p[1])
-                g.add_edge(p[2], neg)
+                g.add_edge(simbol, p[1])
+                g.add_edge(simbol, neg)
             elif p[3][1] in operators:
 
                 print("segundo IF AND")
-
+                print('AAAAAAAA')
                 contador[p[1]] += 1
                 print(p[3] in contador)
                 # g.add_edge(p[2],p[3][1])
@@ -150,24 +159,30 @@ def p_andexp(p):
                 g.add_edge(simbol,p[1] + (contador[p[1]] * ' '))
             elif p[3][1] + p[3][2] in operators:
                 print("segundo IF AND")
-
+                print('EEEEEEE')
                 contador[p[1]] += 1
                 print(p[3] in contador)
                 # g.add_edge(p[2],p[3][1] + p[3][2])
                 # g.add_edge(p[2],p[1] + (contador[p[1]] * ' '))
                 g.add_edge(simbol,p[3][1] + p[3][2])
                 g.add_edge(simbol,p[1] + (contador[p[1]] * ' '))
-        except:
-                print(contador,"r IF AND")
-
+            elif p[3][1]+p[3][2] + p[3][3] in operators:
+                print("entro doble impo")
+                print('eerrrrrrr')
                 contador[p[1]] += 1
-                print(contador,'ultimo except and')
+                print(p[3] in contador)
+                # g.add_edge(p[2],p[3][1] + p[3][2])
                 # g.add_edge(p[2],p[1] + (contador[p[1]] * ' '))
+                g.add_edge(simbol,p[3][1] + p[3][2]+p[3][3])
                 g.add_edge(simbol,p[1] + (contador[p[1]] * ' '))
+        except:
+                # g.add_edge(p[2],p[1] + (contador[p[1]] * ' '))
+                contador[p[1]] += 1
                 contador[p[3]] += 1
                 print(contador,'ultimo except and')
-                # g.add_edge(p[2],p[3] + (contador[p[3]] * ' '))
+                g.add_edge(simbol,p[1] + (contador[p[1]] * ' '))
                 g.add_edge(simbol,p[3] + (contador[p[3]] * ' '))
+                # g.add_edge(p[2],p[3] + (contador[p[3]] * ' '))
 
     p[0] = p[1]+p[2]+p[3]
 
@@ -179,12 +194,19 @@ def p_orexp(p):
     find = True
     # print(list(g.nodes()), 'desde or')
     # print(p[2] in list(g.nodes()))
+    print('lista nodos',list(g.nodes()),simbol)
     while find:
         if simbol in list(g.nodes()):
+            print('entro per')
             simbol = simbol + ' '
         else:
             find = False
+    print(simbol,'simbol')
     try:
+        if (p[1].find('~')) != -1:
+            neg = p[1][0]
+            g.add_edge(simbol,neg)
+            g.add_edge(simbol,p[3])
         if p[1][1] in operators:
             print(p[3] in contador,'primer if or')
             contador[p[3]] += 1
@@ -207,29 +229,38 @@ def p_orexp(p):
             print(contador[p[3]])
     except:
         try:
+            if p[3].find('~') != -1:
+                neg = p[3][0]
+                g.add_edge(simbol, p[1])
+                g.add_edge(simbol, neg)
             if p[3][1] in operators:
                 print("segundo IF OR")
                 print(p[3] in contador)
                 # g.add_edge(p[2],p[3][1])
                 # g.add_edge(p[2],p[1] + (2 * ' '))
+                contador[p[1]]+=1
                 g.add_edge(simbol,p[3][1])
-                g.add_edge(simbol,p[1] + (2 * ' '))
+                g.add_edge(simbol,p[1] + (contador[p[1]] * ' '))
             elif p[3][1] + p[3][2] in operators:
                 print("segundo IF OR")
                 print(p[3] in contador)
+                contador[p[1]]+=1
                 # g.add_edge(p[2],p[3][1])
                 # g.add_edge(p[2],p[1] + (2 * ' '))
                 g.add_edge(simbol,p[3][1] + p[3][2])
-                g.add_edge(simbol,p[1] + (2 * ' '))
+                g.add_edge(simbol,p[1] + (contador[p[1]] * ' '))
         except:
                 print("ultimo except OR")
                 # g.add_edge(p[2],p[1]+' ')
                 # g.add_edge(p[2],p[3])
-                g.add_edge(simbol,p[1]+' ')
-                g.add_edge(simbol,p[3])
+                contador[p[1]] += 1
+                contador[p[3]] += 1
+
+                g.add_edge(simbol,p[1] + contador[p[1]] * ' ')
+                g.add_edge(simbol,p[3] + contador[p[3]] * ' ')
 
     p[0] = p[1]+p[2]+p[3]
-    p[0] = p[1]+p[2]+p[3]
+
 
 def p_impli(p):
     'expr : expr IMPLICATION expr'
@@ -247,7 +278,12 @@ def p_impli(p):
         else:
             find = False
     try:
-        if p[1][1] in operators:
+        if p[1].find('~') != -1:
+                neg = p[1][0]
+                g.add_edge(simbol, p[3])
+                print('neg izquierdo',neg,p[1],p[3],simbol)
+                g.add_edge(simbol, neg)
+        elif p[1][1] in operators:
             print("primer IF IMP")
             if p[3] in contador:
                 contador[p[3]] += 1
@@ -268,35 +304,110 @@ def p_impli(p):
             print(contador[p[3]])
     except:
         try:
-            if p[3][1] in operators:
+            if p[3].find('~') != -1:
+                neg = p[3][0]
+                g.add_edge(simbol, p[1])
+
+                g.add_edge(simbol, neg)
+            elif p[3][1] in operators:
                 print("segundo IF IMP")
                 print(p[3] in contador)
                 # g.add_edge(p[2],p[3][1])
                 # g.add_edge(p[2],p[1] + (2 * ' '))
                 g.add_edge(simbol,p[3][1])
-                g.add_edge(simbol,p[1] + (2 * ' '))
+                g.add_edge(simbol,p[1] + (contador[p[1]] * ' '))
             elif p[3][1] + p[3][2] in operators:
                 print("segundo IF IMP")
                 print(p[3] in contador)
                 # g.add_edge(p[2],p[3][1])
                 # g.add_edge(p[2],p[1] + (2 * ' '))
                 g.add_edge(simbol,p[3][1] + p[3][2])
-                g.add_edge(simbol,p[1] + (2 * ' '))
+                g.add_edge(simbol,p[1] + (contador[p[1]] * ' '))
         except:
                 print("ultimo except IMP")
                 # g.add_edge(p[2],p[1]+' ')
                 # g.add_edge(p[2],p[3])
-                g.add_edge(simbol,p[1]+' ')
-                g.add_edge(simbol,p[3])
+                # print(contador[p[1]])
+                # print(contador[p[3]])
+                contador[p[1]] += 1
+                contador[p[3]] += 1
+                g.add_edge(simbol,p[1] + contador[p[1]] * ' ')
+                g.add_edge(simbol,p[3] + contador[p[3]] * ' ')
 
-    p[0] = p[1]+p[2]+p[3]
     p[0] = p[1]+p[2]+p[3]
 
 def p_dimpli(p):
     'expr : expr DIMPLICATION expr'
-    g.add_edge(p[2],p[1])
-    g.add_edge(p[2],p[3])
+    # g.add_edge(p[2],p[1])
+    # g.add_edge(p[2],p[3])
+    simbol =  p[2]
+    find = True
+    # print(list(g.nodes()), 'desde or')
+    # print(p[2] in list(g.nodes()))
+    while find:
+        if simbol in list(g.nodes()):
+            simbol = simbol + ' '
+        else:
+            find = False
+    try:
+        if p[1].find('~') != -1:
+                neg = p[1][0]
+                g.add_edge(simbol, p[3])
+                print('neg izquierdo',neg,p[1],p[3],simbol)
+                g.add_edge(simbol, neg)
+        elif p[1][1] in operators:
+            print("primer IF IMP")
+            if p[3] in contador:
+                contador[p[3]] += 1
+                # g.add_edge(p[2],p[3] + (contador[p[3]] * ' '))
+                g.add_edge(simbol,p[3] + (contador[p[3]] * ' '))
+            print(p[3] in contador)
+            # g.add_edge(p[2],p[1][1])
+            g.add_edge(simbol,p[1][1])
+        elif p[1][1] + p[1][2] in operators:
+            print(p[3] in contador,'primer if IMP')
+            contador[p[3]] += 1
+            print(contador, "primer if IMP")
+            new = p[3] + (contador[p[3]] * ' ')
+            # g.add_edge(p[2],p[1][1])
+            # g.add_edge(p[2], new)
+            g.add_edge(simbol,p[1][1] + p[1][2])
+            g.add_edge(simbol, new)
+            print(contador[p[3]])
+    except:
+        try:
+            if p[3].find('~') != -1:
+                neg = p[3][0]
+                g.add_edge(simbol, p[1])
+
+                g.add_edge(simbol, neg)
+            elif p[3][1] in operators:
+                print("segundo IF IMP")
+                print(p[3] in contador)
+                # g.add_edge(p[2],p[3][1])
+                # g.add_edge(p[2],p[1] + (2 * ' '))
+                g.add_edge(simbol,p[3][1])
+                g.add_edge(simbol,p[1] + (contador[p[1]] * ' '))
+            elif p[3][1] + p[3][2] in operators:
+                print("segundo IF IMP")
+                print(p[3] in contador)
+                # g.add_edge(p[2],p[3][1])
+                # g.add_edge(p[2],p[1] + (2 * ' '))
+                g.add_edge(simbol,p[3][1] + p[3][2])
+                g.add_edge(simbol,p[1] + (contador[p[1]] * ' '))
+        except:
+                print("ultimo except IMP")
+                # g.add_edge(p[2],p[1]+' ')
+                # g.add_edge(p[2],p[3])
+                # print(contador[p[1]])
+                # print(contador[p[3]])
+                contador[p[1]] += 1
+                contador[p[3]] += 1
+                g.add_edge(simbol,p[1] + contador[p[1]] * ' ')
+                g.add_edge(simbol,p[3] + contador[p[3]] * ' ')
+
     p[0] = p[1]+p[2]+p[3]
+
 
 def p_comma(p):
     'expr : expr COMMA expr'
@@ -324,8 +435,10 @@ parser = yacc.yacc()
 global g
 g = nx.Graph()
 
-#(po(q^r))os
-res = parser.parse("~~~q")
+# doble imp
+
+exp = '(p^(p<=>q))'
+res = parser.parse(exp)
 print(list(g.nodes()))
 
 
