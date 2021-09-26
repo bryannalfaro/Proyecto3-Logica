@@ -26,7 +26,7 @@ contador = {
     'x': 0,
     'y': 0,
     'z': 0,
-    '1':0,
+    '1': 0,
     '0': 0
 }
 
@@ -181,9 +181,9 @@ def p_andexp(p):
         except:
 
             contador[p[1]] += 1
-            contador[p[3]] += 1
-
             g.add_edge(simbol, p[1] + (contador[p[1]] * ' '))
+
+            contador[p[3]] += 1
             g.add_edge(simbol, p[3] + (contador[p[3]] * ' '))
 
     p[0] = p[1]+p[2]+p[3]
@@ -245,9 +245,8 @@ def p_orexp(p):
                 g.add_edge(simbol, p[1] + (contador[p[1]] * ' '))
         except:
             contador[p[1]] += 1
-            contador[p[3]] += 1
-
             g.add_edge(simbol, p[1] + contador[p[1]] * ' ')
+            contador[p[3]] += 1
             g.add_edge(simbol, p[3] + contador[p[3]] * ' ')
 
     p[0] = p[1]+p[2]+p[3]
@@ -302,8 +301,8 @@ def p_impli(p):
                 g.add_edge(simbol, p[1] + (contador[p[1]] * ' '))
         except:
             contador[p[1]] += 1
-            contador[p[3]] += 1
             g.add_edge(simbol, p[1] + contador[p[1]] * ' ')
+            contador[p[3]] += 1
             g.add_edge(simbol, p[3] + contador[p[3]] * ' ')
 
     p[0] = p[1]+p[2]+p[3]
@@ -349,8 +348,8 @@ def p_dimpli(p):
                 g.add_edge(simbol, p[1] + (contador[p[1]] * ' '))
         except:
             contador[p[1]] += 1
-            contador[p[3]] += 1
             g.add_edge(simbol, p[1] + contador[p[1]] * ' ')
+            contador[p[3]] += 1
             g.add_edge(simbol, p[3] + contador[p[3]] * ' ')
 
     p[0] = p[1]+p[2]+p[3]
@@ -400,7 +399,13 @@ p
 # exp = '(p<=>~p)'
 # exp = '((p=>q)^p)'
 # exp = '(~(p^(qor))os)'
-exp = '1^0'
+# exp = '1'
+# exp = '~~~1'
+# exp = '(1^1)'
+# exp = '~(1^0)'
+# exp = '(1<=>~1)'
+# exp = '((0=>0)^1)'
+exp = '(~(0^(0o1))o0)'
 res = parser.parse(exp)
 
 
