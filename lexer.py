@@ -26,6 +26,8 @@ contador = {
     'x': 0,
     'y': 0,
     'z': 0,
+    '1':0,
+    '0': 0
 }
 
 contadorSymbols = {}
@@ -369,7 +371,8 @@ def p_comma1(p):
 
 def p_const(p):
     'expr : CONST'
-
+    if exp.find('o') == -1 and exp.find('^') == -1 and exp.find('=>') == -1 and exp.find('<=>') == -1 and exp.find('~') == -1:
+        g.add_node(p[1])
     p[0] = p[1]
 
 
@@ -397,7 +400,7 @@ p
 # exp = '(p<=>~p)'
 # exp = '((p=>q)^p)'
 # exp = '(~(p^(qor))os)'
-exp = '(p=>(p<=>q))'
+exp = '1^0'
 res = parser.parse(exp)
 
 
