@@ -381,7 +381,7 @@ def p_error(p):
 
 parser = yacc.yacc()
 global g
-g = nx.Graph()
+g = nx.DiGraph()
 
 '''
 p
@@ -398,14 +398,14 @@ p
 # exp = '~(p^q)'
 # exp = '(p<=>~p)'
 # exp = '((p=>q)^p)'
-# exp = '(~(p^(qor))os)'
+exp = '(~(p^(qor))os)'
 # exp = '1'
 # exp = '~~~1'
 # exp = '(1^1)'
 # exp = '~(1^0)'
 # exp = '(1<=>~1)'
 # exp = '((0=>0)^1)'
-exp = '(~(0^(0o1))o0)'
+# exp = '(~(0^(0o1))o0)'
 res = parser.parse(exp)
 
 
